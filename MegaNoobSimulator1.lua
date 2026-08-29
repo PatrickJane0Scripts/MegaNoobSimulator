@@ -1,22 +1,215 @@
--- Auto-Execute / Teleport Desteği
-pcall(function()
-    local queueteleport = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
-    if queueteleport and identifyexecutor then
-        local success, err = pcall(function()
-            queueteleport([[
-                task.wait(2)
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/"))()
-            ]])
-        end)
+-- Tam Ekran Şık Yüklenme Ekranı (Videodaki Tarzda)
+local coreGui = game:GetService("CoreGui")
+local tweenService = game:GetService("TweenService")
+
+local introGui = Instance.new("ScreenGui")
+introGui.Name = "EliteIntroLoading"
+introGui.Parent = coreGui
+introGui.ResetOnSpawn = false
+introGui.IgnoreGuiInset = true
+
+local bgFrame = Instance.new("Frame")
+bgFrame.Parent = introGui
+bgFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
+bgFrame.Size = UDim2.new(1, 0, 1, 0)
+bgFrame.BorderSizePixel = 0
+
+-- Şık Başlık ve Alt Yazı
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Parent = bgFrame
+titleLabel.BackgroundTransparency = 1
+titleLabel.Position = UDim2.new(0.5, -200, 0.5, -35)
+titleLabel.Size = UDim2.new(0, 400, 0, 40)
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.Text = "MEGA NOOB SIMULATOR"
+titleLabel.TextColor3 = Color3.fromRGB(240, 240, 245)
+titleLabel.TextSize = 22
+titleLabel.TextTransparency = 1
+titleLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+local subLabel = Instance.new("TextLabel")
+subLabel.Parent = bgFrame
+subLabel.BackgroundTransparency = 1
+subLabel.Position = UDim2.new(0.5, -200, 0.5, 5)
+subLabel.Size = UDim2.new(0, 400, 0, 25)
+subLabel.Font = Enum.Font.Gotham
+subLabel.Text = "ELITE HUB EXPERIENCE"
+subLabel.TextColor3 = Color3.fromRGB(46, 204, 113)
+subLabel.TextSize = 11
+subLabel.TextTransparency = 1
+subLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+-- Yüklenme Çubuğu Container
+local loadTrack = Instance.new("Frame")
+loadTrack.Parent = bgFrame
+loadTrack.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+loadTrack.Position = UDim2.new(0.5, -125, 0.5, 50)
+loadTrack.Size = UDim2.new(0, 250, 0, 4)
+loadTrack.BorderSizePixel = 0
+loadTrack.BackgroundTransparency = 1
+
+local trackCorner = Instance.new("UICorner")
+trackCorner.CornerRadius = UDim.new(1, 0)
+trackCorner.Parent = loadTrack
+
+local loadFill = Instance.new("Frame")
+loadFill.Parent = loadTrack
+loadFill.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+loadFill.BorderSizePixel = 0
+loadFill.Size = UDim2.new(0, 0, 1, 0)
+
+local fillCorner = Instance.new("UICorner")
+fillCorner.CornerRadius = UDim.new(1, 0)
+fillCorner.Parent = loadFill
+
+local percentLabel = Instance.new("TextLabel")
+percentLabel.Parent = bgFrame
+percentLabel.BackgroundTransparency = 1
+percentLabel.Position = UDim2.new(0.5, -100, 0.5, 65)
+percentLabel.Size = UDim2.new(0, 200, 0, 20)
+percentLabel.Font = Enum.Font.GothamBold
+percentLabel.Text = "0%"
+percentLabel.TextColor3 = Color3.fromRGB(140, 140, 150)
+percentLabel.TextSize = 11
+percentLabel.TextTransparency = 1
+percentLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+-- Animasyon Geçişleri
+tweenService:Create(titleLabel, TweenInfo.new(0.8), {TextTransparency = 0}):Play()
+tweenService:Create(subLabel, TweenInfo.new(0.8), {TextTransparency = 0}):Play()
+tweenService:Create(loadTrack, TweenInfo.new(0.8), {BackgroundTransparency = 0}):Play()
+tweenService:Create(percentLabel, TweenInfo.new(0.8), {TextTransparency = 0}):Play()
+
+task.spawn(function()
+    for i = 1, 100 do
+        percentLabel.Text = i .. "%"
+        loadFill.Size = UDim2.new(i / 100, 0, 1, 0)
+        task.wait(0.02)
     end
+    
+    task.wait(0.3)
+    
+    -- Kapanış Efekti
+    local fadeInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    tweenService:Create(bgFrame, fadeInfo, {BackgroundTransparency = 1}):Play()
+    tweenService:Create(titleLabel, fadeInfo, {TextTransparency = 1}):Play()
+    tweenService:Create(subLabel, fadeInfo, {TextTransparency = 1}):Play()
+    tweenService:Create(loadTrack, fadeInfo, {BackgroundTransparency = 1}):Play()
+    tweenService:Create(loadFill, fadeInfo, {BackgroundTransparency = 1}):Play()
+    tweenService:Create(percentLabel, fadeInfo, {TextTransparency = 1}):Play()
+    
+    task.wait(0.6)
+    introGui:Destroy()
 end)
 
+-- Dil Seçim Ekranı (Menüden Önce Çıkar)
+local coreGui = game:GetService("CoreGui")
+local chosenLanguage = "TR"
+
+local langGui = Instance.new("ScreenGui")
+langGui.Name = "MegaNoobLangSelect"
+langGui.Parent = coreGui
+langGui.ResetOnSpawn = false
+
+local langFrame = Instance.new("Frame")
+langFrame.Parent = langGui
+langFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 20)
+langFrame.Position = UDim2.new(0.5, -160, 0.5, -90)
+langFrame.Size = UDim2.new(0, 320, 0, 180)
+langFrame.BorderSizePixel = 0
+
+local lCorner = Instance.new("UICorner")
+lCorner.CornerRadius = UDim.new(0, 14)
+lCorner.Parent = langFrame
+
+local lStroke = Instance.new("UIStroke")
+lStroke.Color = Color3.fromRGB(46, 204, 113)
+lStroke.Thickness = 2
+lStroke.Parent = langFrame
+
+local langTitle = Instance.new("TextLabel")
+langTitle.Parent = langFrame
+langTitle.BackgroundTransparency = 1
+langTitle.Position = UDim2.new(0, 0, 0, 20)
+langTitle.Size = UDim2.new(1, 0, 0, 30)
+langTitle.Font = Enum.Font.GothamBold
+langTitle.Text = "Whats your language?"
+langTitle.TextColor3 = Color3.fromRGB(240, 240, 245)
+langTitle.TextSize = 16
+langTitle.TextXAlignment = Enum.TextXAlignment.Center
+
+local langSub = Instance.new("TextLabel")
+langSub.Parent = langFrame
+langSub.BackgroundTransparency = 1
+langSub.Position = UDim2.new(0, 0, 0, 50)
+langSub.Size = UDim2.new(1, 0, 0, 20)
+langSub.Font = Enum.Font.Gotham
+langSub.Text = "Lütfen dil seçiniz / Please select language"
+langSub.TextColor3 = Color3.fromRGB(160, 160, 170)
+langSub.TextSize = 11
+langSub.TextXAlignment = Enum.TextXAlignment.Center
+
+local btnTR = Instance.new("TextButton")
+btnTR.Parent = langFrame
+btnTR.BackgroundColor3 = Color3.fromRGB(26, 26, 30)
+btnTR.Position = UDim2.new(0, 25, 0, 95)
+btnTR.Size = UDim2.new(0, 125, 0, 45)
+btnTR.Font = Enum.Font.GothamBold
+btnTR.Text = "Türkçe 🇹🇷"
+btnTR.TextColor3 = Color3.fromRGB(255, 255, 255)
+btnTR.TextSize = 13
+btnTR.AutoButtonColor = false
+
+local trCorner = Instance.new("UICorner")
+trCorner.CornerRadius = UDim.new(0, 10)
+trCorner.Parent = btnTR
+
+local trStroke = Instance.new("UIStroke")
+trStroke.Color = Color3.fromRGB(46, 204, 113)
+trStroke.Thickness = 1.5
+trStroke.Parent = btnTR
+
+local btnEN = Instance.new("TextButton")
+btnEN.Parent = langFrame
+btnEN.BackgroundColor3 = Color3.fromRGB(26, 26, 30)
+btnEN.Position = UDim2.new(1, -150, 0, 95)
+btnEN.Size = UDim2.new(0, 125, 0, 45)
+btnEN.Font = Enum.Font.GothamBold
+btnEN.Text = "English 🇺🇸"
+btnEN.TextColor3 = Color3.fromRGB(255, 255, 255)
+btnEN.TextSize = 13
+btnEN.AutoButtonColor = false
+
+local enCorner = Instance.new("UICorner")
+enCorner.CornerRadius = UDim.new(0, 10)
+enCorner.Parent = btnEN
+
+local enStroke = Instance.new("UIStroke")
+enStroke.Color = Color3.fromRGB(46, 204, 113)
+enStroke.Thickness = 1.5
+enStroke.Parent = btnEN
+
+local langSelectedEvent = Instance.new("BindableEvent")
+
+btnTR.MouseButton1Click:Connect(function()
+    chosenLanguage = "TR"
+    langGui:Destroy()
+    langSelectedEvent:Fire()
+end)
+
+btnEN.MouseButton1Click:Connect(function()
+    chosenLanguage = "EN"
+    langGui:Destroy()
+    langSelectedEvent:Fire()
+end)
+
+langSelectedEvent.Event:Wait()
+
+-- Ana Kodlar Başlangıcı
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
-local coreGui = game:GetService("CoreGui")
 local virtualUser = game:GetService("VirtualUser")
 local uis = game:GetService("UserInputService")
-local tweenService = game:GetService("TweenService")
 local runService = game:GetService("RunService")
 local teleportService = game:GetService("TeleportService")
 local httpService = game:GetService("HttpService")
@@ -26,7 +219,6 @@ local remotes = replicatedStorage:WaitForChild("Remotes", 5)
 local punch = remotes and remotes:WaitForChild("Punch", 5)
 local areas = workspace:WaitForChild("Areas", 5)
 
--- Executor Tespiti
 local executorName = "Unknown"
 pcall(function()
     if identifyexecutor then
@@ -47,7 +239,6 @@ end)
 local rebirthRemote = replicatedStorage:FindFirstChild("Remotes") and replicatedStorage.Remotes:FindFirstChild("Rebirth") 
                       or replicatedStorage:FindFirstChild("Rebirth")
 
--- Sabit Renk Paleti (Koyu Antrasit / Yeşil Tema)
 local Theme = {
     Primary = Color3.fromRGB(46, 204, 113),
     Stroke = Color3.fromRGB(80, 220, 100),
@@ -73,7 +264,6 @@ local Config = {
     ToggleKey = Enum.KeyCode.LeftControl
 }
 
--- Kaydedilen Özel Token Koordinatı (Başlangıçta varsayılan senin verdiğin değer)
 local savedTokenCFrame = CFrame.new(
     -2399.50146, 1698.86572, -584.165466,
     -0.595246196, 6.3557998e-08, 0.803543389,
@@ -159,20 +349,6 @@ titleText.TextColor3 = Theme.TextPrimary
 titleText.TextSize = 13.5
 titleText.TextXAlignment = Enum.TextXAlignment.Left
 
-local statusDot = Instance.new("Frame")
-statusDot.Parent = titleBar
-statusDot.BackgroundColor3 = Theme.Primary
-statusDot.Position = UDim2.new(1, -35, 0.5, -6)
-statusDot.Size = UDim2.new(0, 12, 0, 12)
-local dotCorner = Instance.new("UICorner")
-dotCorner.CornerRadius = UDim.new(1, 0)
-dotCorner.Parent = statusDot
-
-local dotStroke = Instance.new("UIStroke")
-dotStroke.Color = Color3.fromRGB(255, 255, 255)
-dotStroke.Thickness = 1.5
-dotStroke.Parent = statusDot
-
 -- Sürüklenebilirlik
 local dragging, dragInput, dragStart, startPos
 titleBar.InputBegan:Connect(function(input)
@@ -220,7 +396,7 @@ sidebarCover.BorderSizePixel = 0
 sidebarCover.Size = UDim2.new(0.5, 0, 1, 0)
 sidebarCover.Position = UDim2.new(0.5, 0, 0, 0)
 
--- Sol Alt Görsel / Buton
+-- Sol Alt Buton (Rehber / Kullanım Kılavuzu)
 local menuImageLogo = Instance.new("ImageButton")
 menuImageLogo.Parent = sidebar
 menuImageLogo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -234,13 +410,13 @@ local imageCorner = Instance.new("UICorner")
 imageCorner.CornerRadius = UDim.new(0, 6)
 imageCorner.Parent = menuImageLogo
 
--- Not Defteri (Patrick Jane Bilgi Penceresi)
+-- Rehber Penceresi (Hile Kullanımı, Boss, Token, Koordinat)
 local noteFrame = Instance.new("Frame")
 noteFrame.Parent = screenGui
 noteFrame.BackgroundColor3 = Theme.MainBg
 noteFrame.BorderSizePixel = 0
-noteFrame.Position = UDim2.new(0.5, -210, 0.5, -185)
-noteFrame.Size = UDim2.new(0, 420, 0, 370)
+noteFrame.Position = UDim2.new(0.5, -210, 0.5, -195)
+noteFrame.Size = UDim2.new(0, 420, 0, 390)
 noteFrame.Visible = false
 noteFrame.ZIndex = 10
 
@@ -277,7 +453,7 @@ noteTitleText.BackgroundTransparency = 1
 noteTitleText.Position = UDim2.new(0, 15, 0, 0)
 noteTitleText.Size = UDim2.new(0.8, 0, 1, 0)
 noteTitleText.Font = Enum.Font.GothamBold
-noteTitleText.Text = "📖 Patrick Jane - Detaylı Dosya"
+noteTitleText.Text = chosenLanguage == "TR" and "📖 Hile Kullanım Rehberi" or "📖 Script Guide & Manual"
 noteTitleText.TextColor3 = Theme.TextPrimary
 noteTitleText.TextSize = 13
 noteTitleText.TextXAlignment = Enum.TextXAlignment.Left
@@ -311,31 +487,31 @@ noteScroll.Parent = noteFrame
 noteScroll.BackgroundTransparency = 1
 noteScroll.Position = UDim2.new(0, 12, 0, 48)
 noteScroll.Size = UDim2.new(1, -24, 1, -58)
-noteScroll.CanvasSize = UDim2.new(0, 0, 0, 1100)
+noteScroll.CanvasSize = UDim2.new(0, 0, 0, 780)
 noteScroll.ScrollBarThickness = 3
 noteScroll.ZIndex = 11
 
 local currentYPos = 0
 
-local function addSection(titleTr, titleEn, contentTr, contentEn, needsSpoiler)
+local function addGuideSection(title, content)
     local header = Instance.new("TextLabel")
     header.Parent = noteScroll
     header.BackgroundTransparency = 1
     header.Position = UDim2.new(0, 0, 0, currentYPos)
     header.Size = UDim2.new(1, 0, 0, 26)
     header.Font = Enum.Font.GothamBold
-    header.Text = "🔹 " .. titleTr .. " / " .. titleEn
+    header.Text = "🔹 " .. title
     header.TextColor3 = Color3.fromRGB(46, 204, 113)
-    header.TextSize = 14
+    header.TextSize = 13.5
     header.TextXAlignment = Enum.TextXAlignment.Left
     header.ZIndex = 11
-    currentYPos = currentYPos + 30
+    currentYPos = currentYPos + 28
 
     local textHolder = Instance.new("Frame")
     textHolder.Parent = noteScroll
     textHolder.BackgroundColor3 = Color3.fromRGB(26, 26, 30)
     textHolder.Position = UDim2.new(0, 0, 0, currentYPos)
-    textHolder.Size = UDim2.new(1, 0, 0, 115)
+    textHolder.Size = UDim2.new(0.96, 0, 0, 95)
     textHolder.ZIndex = 11
 
     local tCorner = Instance.new("UICorner")
@@ -348,84 +524,28 @@ local function addSection(titleTr, titleEn, contentTr, contentEn, needsSpoiler)
     desc.Position = UDim2.new(0, 10, 0, 8)
     desc.Size = UDim2.new(1, -20, 1, -16)
     desc.Font = Enum.Font.Gotham
-    desc.Text = "TR:\n" .. contentTr .. "\n\nEN:\n" .. contentEn
+    desc.Text = content
     desc.TextColor3 = Color3.fromRGB(255, 255, 255)
-    desc.TextSize = 12
+    desc.TextSize = 11
     desc.TextWrapped = true
     desc.TextXAlignment = Enum.TextXAlignment.Left
     desc.TextYAlignment = Enum.TextYAlignment.Top
     desc.ZIndex = 11
 
-    if needsSpoiler then
-        local spoilerBtn = Instance.new("TextButton")
-        spoilerBtn.Parent = textHolder
-        spoilerBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
-        spoilerBtn.Size = UDim2.new(1, 0, 1, 0)
-        spoilerBtn.Font = Enum.Font.GothamBold
-        spoilerBtn.Text = "SPOILER"
-        spoilerBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        spoilerBtn.TextSize = 16
-        spoilerBtn.ZIndex = 15
-        spoilerBtn.AutoButtonColor = false
-
-        local sCorner = Instance.new("UICorner")
-        sCorner.CornerRadius = UDim.new(0, 8)
-        sCorner.Parent = spoilerBtn
-
-        local sStroke = Instance.new("UIStroke")
-        sStroke.Color = Color3.fromRGB(46, 204, 113)
-        sStroke.Thickness = 1.5
-        sStroke.Parent = spoilerBtn
-
-        spoilerBtn.MouseButton1Click:Connect(function()
-            spoilerBtn:Destroy()
-        end)
-    end
-
-    currentYPos = currentYPos + 125
+    currentYPos = currentYPos + 105
 end
 
-addSection(
-    "Karakter Özeti", "Character Overview",
-    "Patrick Jane, CBI bünyesinde çalışan üstün zekalı, gözlem ve mentalizm ustası danışmandır. Ailesinin Red John tarafından öldürülmesinin ardından intikam peşine düşmüştür.",
-    "Patrick Jane is a brilliant consultant and master of mentalism at the CBI. Following the murder of his family by Red John, he dedicates his life to seeking vengeance.",
-    false
-)
-
-addSection(
-    "Arkadaşlar ve Dostlar", "Friends & Allies",
-    "Teresa Lisbon (en güvendiği amiri ve dostu), Cho, Rigsby ve Van Pelt (sadık CBI ekip arkadaşları).",
-    "Teresa Lisbon (his most trusted boss and close ally), Cho, Rigsby, and Van Pelt (loyal CBI team members).",
-    true
-)
-
-addSection(
-    "Sevgililer ve Romantik İlişkiler", "Romance & Lovers",
-    "Dizinin sonunda Teresa Lisbon ile evlenmiştir (karısı Angela'yı kaybettikten sonraki ilk gerçek aşkı). Geçmişte sahte medyumken veya vakalar sırasında flörtöz anları olmuştur.",
-    "He ultimately marries Teresa Lisbon at the end of the series (his first true love after losing his late wife Angela). He occasionally had flirty moments with others.",
-    true
-)
-
-addSection(
-    "Ondan Hoşlananlar", "Admirers / Crush",
-    "Erica Flynn (Jane'e hayranlık duyan zeki suçlu), Lorelei Martins (Red John'un takipçisi ancak Jane'e karşı hisleri olan biri) ve mesleği boyunca etkilediği çeşitli kadınlar.",
-    "Erica Flynn (intelligent criminal fascinated by him), Lorelei Martins (Red John's follower with complex feelings for him), and various women he charmed throughout cases.",
-    true
-)
-
-addSection(
-    "Düşmanlar", "Enemies",
-    "Red John (baş düşmanı ve ailesinin katili), Tommy Volker, Bret Stiles (Visualize tarikatının lideri) ve CBI'ı sabote eden yolsuzluk şebekeleri.",
-    "Red John (arch-nemesis and family killer), Tommy Volker, Bret Stiles (leader of Visualize), and corrupt networks sabotaging the CBI.",
-    true
-)
-
-addSection(
-    "Ona Benzeyen Karakterler", "Similar Characters",
-    "Sherlock Holmes (keskin gözlem), Adrian Monk (detay takıntısı ve travmatik geçmiş), Shawn Spencer (Psych - benzer zihinsel oyunlar).",
-    "Sherlock Holmes (sharp observation), Adrian Monk (obsessive attention to detail and trauma), Shawn Spencer (Psych - similar mentalist tricks).",
-    true
-)
+if chosenLanguage == "TR" then
+    addGuideSection("Hile Nasıl Kullanılır?", "Sol taraftaki sekmeler (Main, Movements, Settings, Info) aracılığıyla özelliklere kolayca ulaşabilirsin. Menüyü gizleyip açmak için ayarlardan tuş değiştirebilir ya da klavyeden LeftControl tuşunu kullanabilirsin.")
+    addGuideSection("Boss Farm Nasıl Kullanılır?", "Main sekmesinden 'Boss Farm (Tüm Bosslar)' seçeneğini açtığında karakterin etraftaki en güçlü boss'ları otomatik olarak tespit eder ve aralıksız yumruklar (punch atar).")
+    addGuideSection("Token Farm Nasıl Kullanılır?", "Token Farm aktif olduğunda karakterin otomatik olarak belirlediğin özel konuma ışınlanır. Eğer Token Petiniz varsa: SuperToken Collector veya Triple Token Collector 1 tane kullanıp diğer 2. slota damage pet yerleştirin (gamepass'ler için: 4 tane kullanmanız ve 1 tane de damage pet kullanmanız önerilir).")
+    addGuideSection("Koordinatımı Göster / Kaydet", "Settings sekmesindeki 'Koordinatımı Göster' butonuna basarak anlık bulunduğun konumu Token Farm için sabitleyebilir ve kaydedebilirsin.")
+else
+    addGuideSection("How to Use Script?", "You can easily access features using the tabs on the left (Main, Movements, Settings, Info). Press LeftControl or your custom keybind to toggle the menu visibility.")
+    addGuideSection("How to Use Boss Farm?", "When you enable 'Boss Farm' from the Main tab, your character automatically targets and punches all boss enemies nearby without stopping.")
+    addGuideSection("How to Use Token Farm?", "When Token Farm is enabled, your character automatically teleports to your designated coordinates. If you have Token Pets: Use 1 SuperToken Collector or Triple Token Collector and put a damage pet in the 2nd slot (for gamepass holders: it is recommended to use 4 and 1 damage pet).")
+    addGuideSection("Save/Show Coordinates", "Go to the Settings tab and click 'Save Coordinates' to instantly save your current position as the active Token Farm location.")
+end
 
 -- Sayfa Alanları
 local function createPage()
@@ -486,13 +606,18 @@ local function createTab(name, posY, pageToOpen)
     return btn
 end
 
-local mainTabBtn = createTab("Main", 12, mainPage)
+local tMain = chosenLanguage == "TR" and "Main" or "Main"
+local tMovements = chosenLanguage == "TR" and "Movements" or "Movements"
+local tSettings = chosenLanguage == "TR" and "Settings" or "Settings"
+local tInfo = chosenLanguage == "TR" and "Info" or "Info"
+
+local mainTabBtn = createTab(tMain, 12, mainPage)
 activeTabBtn = mainTabBtn
 mainTabBtn.BackgroundColor3 = Theme.Primary
 mainTabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-createTab("Movements", 54, movementsPage)
-createTab("Settings", 96, settingsPage)
-createTab("Info", 138, infoPage)
+createTab(tMovements, 54, movementsPage)
+createTab(tSettings, 96, settingsPage)
+createTab(tInfo, 138, infoPage)
 
 local rainbowLabels = {}
 
@@ -539,11 +664,10 @@ local function createInfoBox(parent, title, desc, posY, isRainbow)
     end
 end
 
-createInfoBox(infoPage, "Script Owner", "PatrickJane", 0, true)
-createInfoBox(infoPage, "Discord", "nawb3__", 44, false)
-createInfoBox(infoPage, "ScriptHelper", "Gemini AI", 88, true)
-createInfoBox(infoPage, "Executor", executorName, 132, false)
-infoPage.CanvasSize = UDim2.new(0, 0, 0, 180)
+createInfoBox(infoPage, "Script Owner", "PatrickJane / H8", 0, true)
+createInfoBox(infoPage, "Discord", "nawb3__ / h8_h80", 44, true)
+createInfoBox(infoPage, "Executor", executorName, 88, false)
+infoPage.CanvasSize = UDim2.new(0, 0, 0, 140)
 
 task.spawn(function()
     while true do
@@ -594,7 +718,9 @@ local function createButton(parent, name, posY, defaultState, callback)
     statusIndicator.Position = UDim2.new(0.65, 0, 0, 0)
     statusIndicator.Size = UDim2.new(0.35, -15, 1, 0)
     statusIndicator.Font = Enum.Font.GothamBold
-    statusIndicator.Text = defaultState and "AÇIK" or "KAPALI"
+    local stateTextOpen = chosenLanguage == "TR" and "AÇIK" or "ON"
+    local stateTextClosed = chosenLanguage == "TR" and "KAPALI" or "OFF"
+    statusIndicator.Text = defaultState and stateTextOpen or stateTextClosed
     statusIndicator.TextColor3 = defaultState and Color3.fromRGB(255, 255, 255) or Theme.TextSecondary
     statusIndicator.TextSize = 12
     statusIndicator.TextXAlignment = Enum.TextXAlignment.Right
@@ -607,27 +733,31 @@ local function createButton(parent, name, posY, defaultState, callback)
         
         tweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = targetColor}):Play()
         tweenService:Create(btnStroke, TweenInfo.new(0.2), {Color = strokeColor}):Play()
-        statusIndicator.Text = state and "AÇIK" or "KAPALI"
+        statusIndicator.Text = state and stateTextOpen or stateTextClosed
         statusIndicator.TextColor3 = textColor
     end)
 end
+
+local bossFarmName = chosenLanguage == "TR" and "Boss Farm (Tüm Bosslar)" or "Boss Farm (All Bosses)"
+local tokenFarmName = chosenLanguage == "TR" and "Token Farm" or "Token Farm"
+local autoRebirthName = chosenLanguage == "TR" and "Auto Rebirth" or "Auto Rebirth"
 
 createButton(mainPage, "Killaura", 0, Config.Killaura, function()
     Config.Killaura = not Config.Killaura
     return Config.Killaura
 end)
 
-createButton(mainPage, "Boss Farm (Tüm Bosslar)", 54, Config.BossFarm, function()
+createButton(mainPage, bossFarmName, 54, Config.BossFarm, function()
     Config.BossFarm = not Config.BossFarm
     return Config.BossFarm
 end)
 
-createButton(mainPage, "Token Farm", 108, Config.TokenFarm, function()
+createButton(mainPage, tokenFarmName, 108, Config.TokenFarm, function()
     Config.TokenFarm = not Config.TokenFarm
     return Config.TokenFarm
 end)
 
-createButton(mainPage, "Auto Rebirth", 162, Config.AutoRebirth, function()
+createButton(mainPage, autoRebirthName, 162, Config.AutoRebirth, function()
     Config.AutoRebirth = not Config.AutoRebirth
     return Config.AutoRebirth
 end)
@@ -680,7 +810,6 @@ keybindBtn.MouseButton1Click:Connect(function()
     kbValue.Text = "..."
 end)
 
--- Yeni Eklenen: Koordinatımı Göster / Kaydet Tuşu
 local saveCoordBtn = Instance.new("TextButton")
 saveCoordBtn.Parent = settingsPage
 saveCoordBtn.BackgroundColor3 = Theme.SecondaryBg
@@ -705,7 +834,7 @@ scLabel.BackgroundTransparency = 1
 scLabel.Position = UDim2.new(0, 15, 0, 0)
 scLabel.Size = UDim2.new(0.6, 0, 1, 0)
 scLabel.Font = Enum.Font.GothamSemibold
-scLabel.Text = "Koordinatımı Göster"
+scLabel.Text = chosenLanguage == "TR" and "Koordinatımı Göster" or "Save Coordinates"
 scLabel.TextColor3 = Theme.TextPrimary
 scLabel.TextSize = 12.5
 scLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -716,7 +845,7 @@ scAction.BackgroundTransparency = 1
 scAction.Position = UDim2.new(0.6, 0, 0, 0)
 scAction.Size = UDim2.new(0.4, -15, 1, 0)
 scAction.Font = Enum.Font.GothamBold
-scAction.Text = "KAYDET"
+scAction.Text = chosenLanguage == "TR" and "KAYDET" or "SAVE"
 scAction.TextColor3 = Theme.TextSecondary
 scAction.TextSize = 12
 scAction.TextXAlignment = Enum.TextXAlignment.Right
@@ -727,11 +856,10 @@ saveCoordBtn.MouseButton1Click:Connect(function()
         if char then
             local rootPart = char:FindFirstChild("HumanoidRootPart")
             if rootPart then
-                -- Mevcut konumu ve yönü (LookVector * 18 ekleyerek) günceller
                 savedTokenCFrame = rootPart.CFrame + (rootPart.CFrame.LookVector * 18)
-                scAction.Text = "KAYDEDİLDİ!"
+                scAction.Text = chosenLanguage == "TR" and "KAYDEDİLDİ!" or "SAVED!"
                 task.delay(2, function()
-                    scAction.Text = "KAYDET"
+                    scAction.Text = chosenLanguage == "TR" and "KAYDET" or "SAVE"
                 end)
             end
         end
@@ -773,13 +901,13 @@ rjAction.BackgroundTransparency = 1
 rjAction.Position = UDim2.new(0.7, 0, 0, 0)
 rjAction.Size = UDim2.new(0.3, -15, 1, 0)
 rjAction.Font = Enum.Font.GothamBold
-rjAction.Text = "BAĞLAN"
+rjAction.Text = chosenLanguage == "TR" and "BAĞLAN" or "REJOIN"
 rjAction.TextColor3 = Theme.TextSecondary
 rjAction.TextSize = 12
 rjAction.TextXAlignment = Enum.TextXAlignment.Right
 
 rjBtn.MouseButton1Click:Connect(function()
-    rjAction.Text = "Yeniden..."
+    rjAction.Text = chosenLanguage == "TR" and "Yeniden..." or "Connecting..."
     pcall(function()
         teleportService:Teleport(game.PlaceId, lp)
     end)
@@ -820,13 +948,13 @@ shAction.BackgroundTransparency = 1
 shAction.Position = UDim2.new(0.7, 0, 0, 0)
 shAction.Size = UDim2.new(0.3, -15, 1, 0)
 shAction.Font = Enum.Font.GothamBold
-shAction.Text = "DEĞİŞ"
+shAction.Text = chosenLanguage == "TR" and "DEĞİŞ" or "HOP"
 shAction.TextColor3 = Theme.TextSecondary
 shAction.TextSize = 12
 shAction.TextXAlignment = Enum.TextXAlignment.Right
 
 shBtn.MouseButton1Click:Connect(function()
-    shAction.Text = "Aranıyor..."
+    shAction.Text = chosenLanguage == "TR" and "Aranıyor..." or "Searching..."
     task.spawn(function()
         local success, servers = pcall(function()
             return httpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
@@ -834,15 +962,15 @@ shBtn.MouseButton1Click:Connect(function()
         if success and servers and servers.data then
             for _, s in pairs(servers.data) do
                 if type(s) == "table" and s.id ~= game.JobId and s.playing < s.maxPlayers then
-                    shAction.Text = "Geçiliyor"
+                    shAction.Text = chosenLanguage == "TR" and "Geçiliyor" or "Joining"
                     teleportService:TeleportToPlaceInstance(game.PlaceId, s.id, lp)
                     break
                 end
             end
         end
-        shAction.Text = "Bulunamadı"
+        shAction.Text = chosenLanguage == "TR" and "Bulunamadı" or "Not Found"
         task.wait(2)
-        shAction.Text = "DEĞİŞ"
+        shAction.Text = chosenLanguage == "TR" and "DEĞİŞ" or "HOP"
     end)
 end)
 
@@ -881,18 +1009,18 @@ iyAction.BackgroundTransparency = 1
 iyAction.Position = UDim2.new(0.7, 0, 0, 0)
 iyAction.Size = UDim2.new(0.3, -15, 1, 0)
 iyAction.Font = Enum.Font.GothamBold
-iyAction.Text = "YÜKLE"
+iyAction.Text = chosenLanguage == "TR" and "YÜKLE" or "LOAD"
 iyAction.TextColor3 = Theme.TextSecondary
 iyAction.TextSize = 12
 iyAction.TextXAlignment = Enum.TextXAlignment.Right
 
 iyBtn.MouseButton1Click:Connect(function()
-    iyAction.Text = "YÜKLENDİ"
+    iyAction.Text = chosenLanguage == "TR" and "YÜKLENDİ" or "LOADED"
     pcall(function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
     end)
     task.delay(2.5, function()
-        iyAction.Text = "YÜKLE"
+        iyAction.Text = chosenLanguage == "TR" and "YÜKLE" or "LOAD"
     end)
 end)
 
@@ -931,13 +1059,13 @@ fpsAction.BackgroundTransparency = 1
 fpsAction.Position = UDim2.new(0.7, 0, 0, 0)
 fpsAction.Size = UDim2.new(0.3, -15, 1, 0)
 fpsAction.Font = Enum.Font.GothamBold
-fpsAction.Text = "ÇALIŞTIR"
+fpsAction.Text = chosenLanguage == "TR" and "ÇALIŞTIR" or "RUN"
 fpsAction.TextColor3 = Theme.TextSecondary
 fpsAction.TextSize = 12
 fpsAction.TextXAlignment = Enum.TextXAlignment.Right
 
 fpsBtn.MouseButton1Click:Connect(function()
-    fpsAction.Text = "AKTİF"
+    fpsAction.Text = chosenLanguage == "TR" and "AKTİF" or "ACTIVE"
     pcall(function()
         _G.Settings = {
             Players = { ["Ignore Me"] = true, ["Ignore Others"] = true },
@@ -948,7 +1076,7 @@ fpsBtn.MouseButton1Click:Connect(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
     end)
     task.delay(2.5, function()
-        fpsAction.Text = "ÇALIŞTIR"
+        fpsAction.Text = chosenLanguage == "TR" and "ÇALIŞTIR" or "RUN"
     end)
 end)
 
@@ -1176,7 +1304,9 @@ local function createSettingsButton(parent, name, posY, defaultState, callback)
     statusIndicator.Position = UDim2.new(0.65, 0, 0, 0)
     statusIndicator.Size = UDim2.new(0.35, -15, 1, 0)
     statusIndicator.Font = Enum.Font.GothamBold
-    statusIndicator.Text = defaultState and "AÇIK" or "KAPALI"
+    local stateTextOpen = chosenLanguage == "TR" and "AÇIK" or "ON"
+    local stateTextClosed = chosenLanguage == "TR" and "KAPALI" or "OFF"
+    statusIndicator.Text = defaultState and stateTextOpen or stateTextClosed
     statusIndicator.TextColor3 = defaultState and Color3.fromRGB(255, 255, 255) or Theme.TextSecondary
     statusIndicator.TextSize = 12
     statusIndicator.TextXAlignment = Enum.TextXAlignment.Right
@@ -1189,7 +1319,7 @@ local function createSettingsButton(parent, name, posY, defaultState, callback)
         
         tweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = targetColor}):Play()
         tweenService:Create(btnStroke, TweenInfo.new(0.2), {Color = strokeColor}):Play()
-        statusIndicator.Text = state and "AÇIK" or "KAPALI"
+        statusIndicator.Text = state and stateTextOpen or stateTextClosed
         statusIndicator.TextColor3 = textColor
     end)
 end
@@ -1268,7 +1398,6 @@ local function getClosestBoss(char)
     return nil
 end
 
--- 30 Saniyede Bir Işınlanma Döngüsü (Token Farm - Kaydedilen Koordinatı Kullanır)
 task.spawn(function()
     while true do
         if Config.TokenFarm then
@@ -1288,7 +1417,6 @@ task.spawn(function()
     end
 end)
 
--- Diğer Farm ve Killaura Döngüsü
 task.spawn(function()
     while true do
         local char = lp.Character
@@ -1305,7 +1433,9 @@ task.spawn(function()
                         local enemy = enemies[i]
                         task.spawn(function()
                             pcall(function()
-                                punch:FireServer(enemy)
+                                pcall(function()
+                                    punch:FireServer(enemy)
+                                end)
                             end)
                         end)
                     end
